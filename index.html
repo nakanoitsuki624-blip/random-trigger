@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>随机触发系统</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI";
+    background: #111;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+  h2 { margin-top: 30px; }
+  button {
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin: 8px;
+    font-size: 16px;
+  }
+  button:hover {
+    background: #555;
+  }
+</style>
+</head>
+<body>
+
+<h1>随机触发系统</h1>
+
+<button onclick="randomTrigger()">随机触发时机</button>
+
+<div id="triggers"></div>
+<div id="effects"></div>
+
+<script>
+// ==================== ① 触发时机中文名（30 个） ====================
+const triggerNames = {
+  T01:"起床后", T02:"洗漱后", T03:"早餐后", T04:"出门前", T05:"通勤中",
+  T06:"到达目的地", T07:"学习开始", T08:"学习中", T09:"学习结束", T10:"午餐前",
+  T11:"午餐后", T12:"下午开始", T13:"下午中段", T14:"运动前", T15:"运动中",
+  T16:"运动后", T17:"洗澡前", T18:"洗澡后", T19:"晚餐前", T20:"晚餐后",
+  T21:"休息时", T22:"娱乐时", T23:"情绪低落时", T24:"情绪高涨时", T25:"夜晚开始",
+  T26:"夜深时", T27:"困倦时", T28:"临睡前", T29:"失眠时", T30:"随机时刻"
+};
+
+// ==================== ② 触发效果中文名（30 个） ====================
+const effectNames = {
+  E01:"播放音乐", E02:"暂停当前行为", E03:"深呼吸 1 分钟", E04:"随机奖励",
+  E05:"随机惩罚", E06:"记录一次", E07:"震动提醒", E08:"弹出提示",
+  E09:"喝水提醒", E10:"拉伸身体", E11:"短暂冥想", E12:"查看计划",
+  E13:"延迟 5 分钟", E14:"立刻行动", E15:"减少强度",
+  E16:"增加强度", E17:"切换任务", E18:"放松模式",
+  E19:"专注模式", E20:"随机选择",
+  E21:"写一句话", E22:"计时 10 分钟", E23:"计时 25 分钟",
+  E24:"站立 1 分钟", E25:"走动一下",
+  E26:"喝一口水", E27:"看向远处", E28:"闭眼休息",
+  E29:"记录心情", E30:"什么都不做"
+};
+
+// ==================== ③ 触发时机 → 可用效果规则（30 组） ====================
+const triggerMap = {
+  T01:["E01","E03","E09","E26"],
+  T02:["E07","E08","E10","E24"],
+  T03:["E04","E06","E12","E21"],
+  T04:["E02","E14","E19","E22"],
+  T05:["E01","E18","E25","E27"],
+  T06:["E06","E08","E12","E29"],
+  T07:["E19","E22","E23","E30"],
+  T08:["E02","E17","E20","E28"],
+  T09:["E04","E06","E18","E30"],
+  T10:["E09","E13","E26","E27"],
+  T11:["E04","E06","E21","E29"],
+  T12:["E19","E22","E23","E14"],
+  T13:["E10","E11","E15","E16"],
+  T14:["E14","E16","E22","E23"],
+  T15:["E15","E16","E07","E24"],
+  T16:["E10","E11","E18","E30"],
+  T17:["E02","E13","E28","E30"],
+  T18:["E01","E18","E06","E29"],
+  T19:["E09","E26","E12","E13"],
+  T20:["E04","E06","E21","E30"],
+  T21:["E18","E25","E27","E28"],
+  T22:["E01","E17","E20","E30"],
+  T23:["E03","E11","E18","E28"],
+  T24:["E04","E16","E21","E22"],
+  T25:["E01","E18","E27","E28"],
+  T26:["E02","E03","E11","E30"],
+  T27:["E13","E28","E30","E03"],
+  T28:["E11","E18","E29","E30"],
+  T29:["E03","E11","E28","E29"],
+  T30:["E20","E30","E04","E06"]
+};
+
+// ==================== 工具函数 ====================
+function randomPick(arr, n) {
+  return [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
+}
+
+// ==================== 随机触发时机 ====================
+function randomTrigger() {
+  document.getElementById("effects").innerHTML = "";
+  const keys = Object.keys(triggerMap);
+  const picks = randomPick(keys, 3);
+  const box = document.getElementById("triggers");
+  box.innerHTML = "<h2>选择触发时机</h2>";
+
+  picks.forEach(t => {
+    const btn = document.createElement("button");
+    btn.innerText = triggerNames[t];
+    btn.onclick = () => randomEffect(t);
+    box.appendChild(btn);
+  });
+}
+
+// ==================== 随机触发效果 ====================
+function randomEffect(trigger) {
+  const effects = triggerMap[trigger];
+  const picks = randomPick(effects, 3);
+  const box = document.getElementById("effects");
+  box.innerHTML = `<h2>${triggerNames[trigger]} → 选择触发效果</h2>`;
+
+  picks.forEach(e => {
+    const btn = document.createElement("button");
+    btn.innerText = effectNames[e];
+    box.appendChild(btn);
+  });
+}
+</script>
+
+</body>
+</html>
