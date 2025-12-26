@@ -25,6 +25,31 @@
   button:hover {
     background: #555;
   }
+  #history {
+  margin-top: 30px;
+  text-align: left;
+}
+.history-item {
+  background: #222;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.delete-btn {
+  background: #800;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.delete-btn:hover {
+  background: #f00;
+}
+
 </style>
 </head>
 <body>
@@ -35,6 +60,8 @@
 
 <div id="triggers"></div>
 <div id="effects"></div>
+<h2>历史结果</h2>
+<div id="history"></div>
 
 <script>
 // ==================== ① 触发时机中文名（30 个） ====================
@@ -126,9 +153,23 @@ function randomEffect(trigger) {
   picks.forEach(e => {
     const btn = document.createElement("button");
     btn.innerText = effectNames[e];
+    btn.onclick = () => addHistory(trigger, e);
     box.appendChild(btn);
   });
 }
+  function addHistory(trigger, effect) {
+  const historyBox = document.getElementById("history");
+  const div = document.createElement("div");
+  div.className = "history-item";
+  div.innerHTML = `<span>${triggerNames[trigger]} → ${effectNames[effect]}</span>`;
+  const delBtn = document.createElement("button");
+  delBtn.className = "delete-btn";
+  delBtn.innerText = "删除";
+  delBtn.onclick = () => div.remove();
+  div.appendChild(delBtn);
+  historyBox.appendChild(div);
+}
+
 </script>
 
 </body>
